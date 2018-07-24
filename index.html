@@ -34,7 +34,6 @@
         .left, .right {
             float: left;
             width: 30%;
-  
         }
         
         .right {
@@ -44,17 +43,34 @@
             justify-content: center;
             flex-direction: column;
             height: 480px;
-
         }
         
         .right h3 {
             display: block;
-            font-size: 100pt;
+            font-size: 80pt;
+            margin: 0;
         }
         
-        @media (min-width: 787px) {
+        @media (min-width: 830px) {
             .container {
-                width: 787px;
+                width: 800px;
+            }
+        }
+        
+        @media (max-width: 750px) {
+            .right h3 {
+                font-size: 50pt;
+            }
+        }
+        
+        @media (max-width: 650px) {
+            .left, .right {
+                clear: both;
+                width: 100%;
+            }
+            
+            .right {
+                height: 200px;
             }
         }
     </style>
@@ -68,7 +84,10 @@
             </div>
         </div>
         <div class="right">
-            <h3>I want Pizza</h3>
+            <div>
+            <h3>I want</h3>
+            <h3 id="pizza"></h3>
+            </div>
         </div>
     </div>
     <script>
@@ -79,6 +98,42 @@
         const FLIP_TIME = 25;
         var flipTime = FLIP_TIME;
         var inaccuracy = 15;
+        
+        var typeTimer = 0;
+        var index = 0;
+        var pizzaText = "P I Z Z A";
+        const TYPE_TIME = 15;
+        var typeTime = 15;
+        const RESET_TIME = 150;
+        var doneTyping = false;
+        var foundZ = false;
+        var pizzaLabel = document.getElementById("pizza");
+        
+        function resetTypeWriter() {
+            typeTimer = -50;
+            pizzaLabel.innerHTML = "";
+            doneTyping = false;
+            index = 0;
+            typeTime = TYPE_TIME;
+            foundZ = false;
+        }
+        
+        function typeNext() {
+            var nextLetter = pizzaText.charAt(index);
+            pizzaLabel.innerHTML += nextLetter;
+            index++;
+            typeTimer = 0;
+            
+            if (nextLetter == 'Z' && !foundZ) {
+                typeTime = 0;
+                foundZ = true;
+            } 
+            else typeTime = TYPE_TIME;
+            
+            if (index >= pizzaText.length) {
+                doneTyping = true;
+            }
+        }
         
         function flipJohn() {
             if (flipped) {
@@ -99,8 +154,16 @@
         
         function johnLoop() {
             timer += 1;
+            typeTimer += 1;
+            
             if (timer > flipTime) {
                 flipJohn();
+            }
+            
+            if (doneTyping) {
+                if (typeTimer > RESET_TIME) resetTypeWriter();
+            } else {
+                if (typeTimer > typeTime) typeNext();
             }
             
             window.requestAnimationFrame(johnLoop);
