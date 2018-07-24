@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>What does John want?</title>
+    <style>
+        img { 
+            height: 100%; 
+        }
+        .flip {
+            -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+        }
+        .john-container {
+            height: 400px;
+        }
+        .container {
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 15px;
+        }
+        
+        .left, .right {
+            float: left;
+            width: 30%;
+  
+        }
+        
+        .right {
+            width: 70%;
+            clear:right;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            height: 480px;
+
+        }
+        
+        .right h3 {
+            display: block;
+            font-size: 100pt;
+        }
+        
+        @media (min-width: 787px) {
+            .container {
+                width: 787px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>What does John want?</h1>
+            <div class="john-container">
+                <img id="john" src="media/john.png" />
+            </div>
+        </div>
+        <div class="right">
+            <h3>I want Pizza</h3>
+        </div>
+    </div>
+    <script>
+        var john = document.getElementById("john");
+        var flip = "flip";
+        var flipped = false;
+        var timer = 0;
+        const FLIP_TIME = 25;
+        var flipTime = FLIP_TIME;
+        var inaccuracy = 15;
+        
+        function flipJohn() {
+            if (flipped) {
+                john.classList.remove(flip);
+            } else {
+                john.classList.add(flip);
+            }
+            
+            flipped = !flipped;
+            timer = 0;
+            var offset = Math.floor(Math.random() * inaccuracy);
+            if (Math.random() < 0.5) {
+                offset = -offset;
+            }
+            
+            flipTime = FLIP_TIME + offset;
+        }
+        
+        function johnLoop() {
+            timer += 1;
+            if (timer > flipTime) {
+                flipJohn();
+            }
+            
+            window.requestAnimationFrame(johnLoop);
+        }
+        
+        window.requestAnimationFrame(johnLoop);
+    </script>
+</body>
+</html>
